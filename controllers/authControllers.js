@@ -21,6 +21,17 @@ const registerSchema = joi.object({
     })
 });
 
+const loginSchema = joi.object({
+    email: joi.string().email().required().messages({
+        'string.email': 'Please enter a valid email address',
+        'any.required': 'Email is required'
+    }),
+    password: joi.string().min(6).required().messages({
+        'string.min': 'Password must be at least 6 characters long',
+        'any.required': 'Password is required'
+    })
+});
+
 
 module.exports.registerUser = async(req,res)=>{
     const { error, value } = registerSchema.validate(req.body, { abortEarly: false });
@@ -64,4 +75,30 @@ module.exports.registerUser = async(req,res)=>{
         dbgr(err.message)
         res.status(400).send(err.message);
     }
+}
+
+module.exports.loginUser= async(req,res)=>{
+    const { error, value } = loginSchema.validate(req.body, { abortEarly: false });
+
+    if (error) {
+        const errorMessages = error.details.map(detail => detail.message);
+        return res.status(400).json({ 
+            success: false, 
+            errors: errorMessages 
+        });
+    }
+    let{email,password}=req.body
+    let user=await userModel.findOne({email})
+    if(!user) return res.send('Email or Password incorrect');
+    
+    bcrypt.compare(password,user.password,(err,result)=>{
+        if(result){
+            let token=generateToken(user)
+            res.cookie("token",token)
+            res.send('you can login')
+        }
+        else{
+            res.send('Email or Password incorrect')
+        }
+    })
 }
