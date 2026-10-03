@@ -6,6 +6,7 @@ const db=require('./config/mongoose-connection')
 const ownersRouter=require('./routes/ownersRouter')
 const usersRouter=require('./routes/usersRouter')
 const productsRouter=require('./routes/productsRouter')
+const dbgr=require('debug')('development:app')
 
 
 app.use(express.json())
@@ -24,7 +25,6 @@ app.get('/',(req,res)=>{
 })
 
 
-
 app.listen(3000,()=>{
-    console.log("server starting at port 3000")
+    dbgr('server starting at port 3000')
 })
