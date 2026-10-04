@@ -22,6 +22,15 @@ app.use(express.urlencoded({extended:true}))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname,'public')))
 
+app.use(
+    expressSession({
+        resave: false,
+        saveUninitialized: false,
+        secret: process.env.EXPRESS_SESSION_SECRET,
+    })
+)
+
+app.use(flash())
 
 app.set('view engine','ejs')
 
@@ -30,7 +39,7 @@ app.set('view engine','ejs')
 app.use('/owners', ownersRouter)
 app.use('/users', usersRouter)
 app.use('/products', productsRouter)
-app.use('/index', indexRouter)
+app.use('/', indexRouter)
 
 app.get('/',(req,res)=>{
     res.send('hey')
