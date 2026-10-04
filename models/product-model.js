@@ -9,7 +9,7 @@ const productSchema=mongoose.Schema({
         default: 0
     },
     bgcolor: String,
-    pannelcolor: String,
+    panelcolor: String,
     textcolor: String
 });
 

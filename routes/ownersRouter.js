@@ -20,8 +20,11 @@ if(process.env.NODE_ENV==="development"){
     })
 }
 
+// etar jnno  middleware lagbe..ar admin login er ekta route and page lagbe i think
+
 router.get('/admin',(req,res)=>{
-    res.render('createproducts')
+    let success=req.flash("success");
+    res.render('createproducts',{success})
 })
 
 
