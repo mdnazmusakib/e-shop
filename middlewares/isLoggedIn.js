@@ -1,5 +1,5 @@
 const jwt=require('jsonwebtoken')
-const useModel=require('../models/user-model')
+const userModel=require('../models/user-model')
 
 module.exports=async (req,res,next)=>{
     if(!req.cookies.token){
@@ -15,6 +15,6 @@ module.exports=async (req,res,next)=>{
     }
     catch(err){
         req.flash("error","something went wrong")
-        req.redirect('/')
+        res.redirect('/')
     }
 }

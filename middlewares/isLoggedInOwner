@@ -1,0 +1,30 @@
+const jwt = require('jsonwebtoken');
+const ownerModel = require('../models/owner_model');
+
+module.exports = async (req, res, next) => {
+    if (!req.cookies || !req.cookies.token) {
+        req.flash("error", "You need to login as Owner first");
+        return res.redirect('/owners/login');
+    }
+
+    try {
+        let decoded = jwt.verify(req.cookies.token, process.env.JWT_KEY);
+        
+        if (decoded.role !== 'owner') {
+            req.flash("error", "Access denied. Admin only.");
+            return res.redirect('/owners/login');
+        }
+
+        let owner = await ownerModel.findOne({ email: decoded.email }).select('-password');
+        if (!owner) {
+            req.flash("error", "Owner account not found");
+            return res.redirect('/owners/login');
+        }
+
+        req.owner = owner;
+        next();
+    } catch (err) {
+        req.flash("error", "Session expired or invalid token. Please login again.");
+        res.redirect('/owners/login');
+    }
+};
