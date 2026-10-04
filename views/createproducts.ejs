@@ -10,8 +10,12 @@
 </head>
 
 <body class="font-['helvetica_now_display']">
-    <nav class="w-full fixed top-0 left-0 px-5 py-3">
+    <nav class="w-full flex justify-between px-5 py-3">
         <h3 class="text-xl">Scatch</h3>
+        <div class="flex gap-5">
+            <!-- <a href="/shop">Shop</a> -->
+            <a class="text-red-600" href="/owners/logout">Logout</a>
+        </div>
     </nav>
         <% if(success.length>0){ %>
         <div class="absolute top-5 left-1/2 -translate-x-1/2 -translate-y-1/2 p-3 rounded-md bg-blue-500">
@@ -24,7 +28,7 @@
             <div class="container px-10 py-20 flex flex-grow">
                 <div class="w-[25%] flex h-screen flex-col items-start">
                     <div class="flex flex-col">
-                        <a class="block w-fit mb-2" href="/shop">All Products</a>
+                        <a class="block w-fit mb-2" href="/owners/shop">All Products</a>
                         <a class="block w-fit mb-2" href="/owners/admin">Create new product</a>
                     </div>
                 </div>

@@ -38,9 +38,9 @@ module.exports.login=async (req, res) => {
             return res.redirect('/owners/login');
         }
 
-        let token = generateTokenOwner(owner)
+        let tokenOwner = generateTokenOwner(owner)
 
-        res.cookie("token", token, {
+        res.cookie("tokenOwner", tokenOwner, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production'
         });
@@ -54,6 +54,6 @@ module.exports.login=async (req, res) => {
 }
 
 module.exports.logout= (req,res)=>{
-    res.cookie("token","")
+    res.cookie("tokenOwner","")
     res.redirect('/')
 }

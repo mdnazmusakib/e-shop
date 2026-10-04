@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const joi = require('joi');
 const isLoggedInOwner = require('../middlewares/isLoggedInOwner');
 const {login,logout}=require('../controllers/authControllersOwner')
+const productModel =require('../models/product-model')
 
 const ownerCreateSchema = joi.object({
     fullname: joi.string().min(3).trim().required().messages({
@@ -67,6 +68,11 @@ router.get('/login', (req, res) => {
 
 router.post('/login', login);
 router.get('/logout', logout)
+
+router.get('/shop',isLoggedInOwner,async(req,res)=>{
+    let products=await productModel.find()
+    res.render('shop',{products})
+})
 
 router.get('/admin',isLoggedInOwner,(req,res)=>{
     let success=req.flash("success");

@@ -4,59 +4,289 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+
+    <title>My Cart - Scatch</title>
+
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 
-<body class="font-['helvetica_now_display']">
-    <nav class="w-full fixed top-0 left-0 px-5 py-3">
+<body class="font-['helvetica_now_display'] bg-gray-100">
+
+    <!-- Navbar -->
+    <nav class="w-full flex justify-between px-5 py-3">
         <h3 class="text-xl">Scatch</h3>
+        <div class="flex gap-5">
+            <a href="/shop">Shop</a>
+            <a href="/cart">Cart</a>
+            <a href="">My Account</a>
+            <a class="text-red-600" href="/users/logout">Logout</a>
+        </div>
     </nav>
-    <div class="w-full h-screen flex items-start px-20 py-20 gap-10">
-        <div class="w-[30%] rounded-md overflow-hidden">
-            <div class="w-full h-80 bg-yellow-500"></div>
-            <div class="w-full flex justify-between px-5 py-4">
-                <h3 class="text-2xl">Clinge Bag</h3>
-                <div class="flex items-center gap-2">
-                    <i class="w-7 h-7 bg-white flex rounded-full items-center justify-center ri-add-line"></i>
-                    <div class="px-2 py-1 rounded-md bg-white text-black">01</div>
-                    <i class="w-7 h-7 bg-white flex rounded-full items-center justify-center ri-subtract-line"></i>
+
+
+    <div class="min-h-screen px-5 sm:px-10 lg:px-20 py-10">
+
+        <h1 class="text-3xl font-semibold mb-8">
+            My Cart
+        </h1>
+        <div class="flex flex-col lg:flex-row gap-10">
+            <div class="w-full lg:w-[65%]">
+
+                <h2 class="text-xl font-semibold mb-5">
+                    Cart Items
+                </h2>
+                <% if (user.cart.length === 0) { %>
+                    <div class="bg-white rounded-lg p-10 text-center shadow-sm">
+                        <i class="ri-shopping-cart-line text-6xl text-gray-400"></i>
+                        <h3 class="text-xl font-semibold mt-4">
+                            Your cart is empty
+                        </h3>
+                        <a href="/shop"
+                            class="inline-block mt-5 px-6 py-3 rounded-md bg-black text-white">
+                            Continue Shopping
+                        </a>
+                    </div>
+                <% } else { %>
+                
+                    <% user.cart.forEach(function(product) { %>
+                        <div class="w-full bg-white rounded-lg overflow-hidden shadow-sm mb-5"
+                            data-product-id="<%= product._id %>">
+                            <div class="flex flex-col sm:flex-row">
+                                <div
+                                    class="w-full sm:w-[220px] h-[220px] bg-[<%=product.bgcolor%>] flex items-center justify-center"
+                                >
+                                    <img
+                                        class="h-[170px] w-[170px] object-contain"
+                                        src="data:image/jpeg;base64,<%= product.image.toString('base64') %>"
+                                        alt="<%= product.name %>"
+                                    >
+                                </div>
+                                <div class="flex-1 p-5 bg-[<%=product.panelcolor%>]">
+
+                                    <div class="flex justify-between items-start gap-4">
+
+                                        <h3 class="text-xl font-semibold">
+                                            <%= product.name %>
+                                        </h3>
+                                        <button
+                                            type="button"
+                                            class="delete-cart-item text-red-500 text-xl hover:text-red-700 transition"
+                                            data-product-id="<%= product._id %>"
+                                        >
+                                            <i class="ri-delete-bin-line"></i>
+                                        </button>
+
+                                    </div>
+                                    <div class="mt-6">
+
+                                        <div class="flex items-center gap-3">
+                                            <h3 class="text-xl font-semibold">
+                                                ₹ <%= product.price %>
+                                            </h3>
+
+                                            <% if (Number(product.discount || 0) > 0) { %>
+                                                <span class="text-red-500 text-lg font-medium">
+                                                    -₹ <%= product.discount %>
+                                                </span>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-3 mt-6">
+
+                                        <span class="text-sm text-gray-500">
+                                            Quantity
+                                        </span>
+                                        <button
+                                            type="button"
+                                            class="decrease-cart-item w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition"
+                                            data-product-id="<%= product._id %>"
+                                        >
+                                            <i class="ri-subtract-line"></i>
+                                        </button>
+                                        <span
+                                            class="cart-quantity px-4 py-1 rounded-md bg-gray-100"
+                                            data-product-id="<%= product._id %>"
+                                        >
+                                            1
+                                        </span>
+                                        <button
+                                            type="button"
+                                            class="increase-cart-item w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition"
+                                            data-product-id="<%= product._id %>"
+                                        >
+                                            <i class="ri-add-line"></i>
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    <% }) %>
+
+                <% } %>
+
+            </div>
+
+            <div class="w-full lg:w-[35%]">
+
+                <div class="bg-white rounded-lg p-6 shadow-sm lg:sticky lg:top-5">
+
+                    <h2 class="text-xl font-semibold mb-6">
+                        Price Breakdown
+                    </h2>
+
+                    <div class="flex justify-between mt-3">
+                        <h4 class="text-gray-600">
+                            Total MRP
+                        </h4>
+                        <h4>
+                            ₹
+                            <%= user.cart.reduce((total, product) => {
+                                return total + Number(product.price || 0);
+                            }, 0) %>
+                        </h4>
+
+                    </div>
+                    <div class="flex justify-between mt-4">
+
+                        <h4 class="text-gray-600">
+                            Discount on MRP
+                        </h4>
+
+                        <h4 class="text-red-500">
+                            -₹
+                            <%= user.cart.reduce((total, product) => {
+                                return total + Number(product.discount || 0);
+                            }, 0) %>
+
+                        </h4>
+                    </div>
+
+
+                    <!-- Platform Fee -->
+
+                    <div class="flex justify-between mt-4">
+                        <h4 class="text-gray-600">
+                            Platform Fee
+                        </h4>
+                        <h4>
+                            ₹ 20
+                        </h4>
+                    </div>
+
+                    <div class="flex justify-between mt-4">
+                        <h4 class="text-gray-600">
+                            Shipping Fee
+                        </h4>
+                        <h4 class="text-green-600">
+                            FREE
+                        </h4>
+
+                    </div>
+                    <div class="w-full h-[1px] bg-gray-200 mt-7"></div>
+
+                    <div class="flex justify-between mt-6">
+
+                        <h3 class="text-xl font-semibold">
+                            Total Amount
+                        </h3>
+
+                        <h3 class="text-xl font-semibold text-green-600">
+
+                            ₹
+                            <%= user.cart.reduce((total, product) => {
+                                return total
+                                    + Number(product.price || 0)
+                                    - Number(product.discount || 0);
+                            }, 20) %>
+
+                        </h3>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="w-full mt-7 py-3 rounded-md bg-black text-white hover:bg-gray-800 transition"
+                    >
+                        Proceed to Checkout
+                    </button>
+
                 </div>
+
             </div>
-            <div class="flex items-center justify-between px-5 py-3">
-                <h4 class="text-lg">Net Total</h4>
-                <h2 class="text-lg">₹ 1200</h2>
-            </div>
+
         </div>
-        <div class="w-[70%]">
-            <h3 class="text-xl">Price Breakdown</h3>
-            <div class="px-10 mt-5">
-                <div class="flex mt-2">
-                    <h4 class="w-1/3">Total MRP</h4>
-                    <h4>₹ 1920</h4>
-                </div>
-                <div class="flex mt-2">
-                    <h4 class="w-1/3">Discount on MRP</h4>
-                    <h4>₹ 0</h4>
-                </div>
-                <div class="flex mt-2">
-                    <h4 class="w-1/3">Platform Fee</h4>
-                    <h4>₹ 20</h4>
-                </div>
-                <div class="flex mt-2">
-                    <h4 class="w-1/3">Shipping Fee</h4>
-                    <h4>FREE</h4>
-                </div>
-            </div>
-            <div class="w-full h-[1px] bg-black mt-10"></div>
-            <div class="flex mt-5">
-                <h3 class="w-1/3 text-xl">Total Amount</h3>
-                <h3 class="font-semibold text-xl text-green-600">₹ 1940</h3>
-            </div>
-            <form action=""></form>
-        </div>
+
     </div>
+
+
+    <!-- ================= CART ACTIONS ================= -->
+
+    <script>
+
+        // Increase quantity
+        document.querySelectorAll('.increase-cart-item').forEach(button => {
+
+            button.addEventListener('click', () => {
+
+                const productId = button.dataset.productId;
+
+                console.log('Increase quantity:', productId);
+
+                // Later:
+                // fetch('/cart/increase/' + productId, {
+                //     method: 'POST'
+                // });
+
+            });
+
+        });
+
+
+        // Decrease quantity
+        document.querySelectorAll('.decrease-cart-item').forEach(button => {
+
+            button.addEventListener('click', () => {
+
+                const productId = button.dataset.productId;
+
+                console.log('Decrease quantity:', productId);
+
+                // Later:
+                // fetch('/cart/decrease/' + productId, {
+                //     method: 'POST'
+                // });
+
+            });
+
+        });
+
+
+        // Delete product
+        document.querySelectorAll('.delete-cart-item').forEach(button => {
+
+            button.addEventListener('click', () => {
+
+                const productId = button.dataset.productId;
+
+                console.log('Delete product:', productId);
+
+                // Later:
+                // fetch('/cart/remove/' + productId, {
+                //     method: 'POST'
+                // });
+
+            });
+
+        });
+
+    </script>
+
 </body>
 
 </html>

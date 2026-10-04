@@ -2,13 +2,13 @@ const jwt = require('jsonwebtoken');
 const ownerModel = require('../models/owner_model');
 
 module.exports = async (req, res, next) => {
-    if (!req.cookies || !req.cookies.token) {
+    if (!req.cookies || !req.cookies.tokenOwner) {
         req.flash("error", "You need to login as Owner first");
         return res.redirect('/owners/login');
     }
 
     try {
-        let decoded = jwt.verify(req.cookies.token, process.env.JWT_KEY);
+        let decoded = jwt.verify(req.cookies.tokenOwner, process.env.JWT_KEY);
         
         if (decoded.role !== 'owner') {
             req.flash("error", "Access denied. Admin only.");
