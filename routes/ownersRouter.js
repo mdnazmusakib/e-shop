@@ -20,8 +20,8 @@ if(process.env.NODE_ENV==="development"){
     })
 }
 
-router.get('/',(req,res)=>{
-    res.send('hey!!!its working')
+router.get('/admin',(req,res)=>{
+    res.render('createproducts')
 })
 
 
