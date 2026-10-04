@@ -4,6 +4,7 @@ const ownerModel=require('../models/owner_model')
 const bcrypt = require('bcrypt');
 const joi = require('joi');
 const isLoggedInOwner = require('../middlewares/isLoggedInOwner');
+const isLoggedInRedirectOwner = require('../middlewares/isLoggedInRedirectOwner');
 const {login,logout}=require('../controllers/authControllersOwner')
 const productModel =require('../models/product-model')
 
@@ -60,7 +61,7 @@ if(process.env.NODE_ENV==="development"){
     })
 }
 
-router.get('/login', (req, res) => {
+router.get('/login',isLoggedInRedirectOwner, (req, res) => {
     let error = req.flash("error");
     res.render('owner-login', { error });
 });

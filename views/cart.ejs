@@ -13,13 +13,20 @@
 
 <body class="font-['helvetica_now_display'] bg-gray-100">
 
-    <!-- Navbar -->
+    <% if(success.length>0){ %>
+        <div class="absolute top-5 left-1/2 -translate-x-1/2 -translate-y-1/2 p-3 rounded-md bg-blue-500">
+            <span class="inline-block mt-1 mb-1 text-white">
+                <%= success %>
+            </span>
+        </div>
+    <% } %>
+
     <nav class="w-full flex justify-between px-5 py-3">
         <h3 class="text-xl">Scatch</h3>
         <div class="flex gap-5">
             <a href="/shop">Shop</a>
             <a href="/cart">Cart</a>
-            <a href="">My Account</a>
+            <a href="/account">My Account</a>
             <a class="text-red-600" href="/users/logout">Logout</a>
         </div>
     </nav>
@@ -69,25 +76,24 @@
                                         <h3 class="text-xl font-semibold">
                                             <%= product.name %>
                                         </h3>
-                                        <button
-                                            type="button"
-                                            class="delete-cart-item text-red-500 text-xl hover:text-red-700 transition"
-                                            data-product-id="<%= product._id %>"
-                                        >
+                                        <a href="/cart/delete/<%= product._id %>"
+                                            class="text-red-500 text-xl hover:text-red-700 transition"
+                                            title="Remove from cart"
+                                            >
                                             <i class="ri-delete-bin-line"></i>
-                                        </button>
+                                        </a>
 
                                     </div>
                                     <div class="mt-6">
 
                                         <div class="flex items-center gap-3">
                                             <h3 class="text-xl font-semibold">
-                                                ₹ <%= product.price %>
+                                                ৳ <%= product.price %>
                                             </h3>
 
                                             <% if (Number(product.discount || 0) > 0) { %>
                                                 <span class="text-red-500 text-lg font-medium">
-                                                    -₹ <%= product.discount %>
+                                                    -৳ <%= product.discount %>
                                                 </span>
                                             <% } %>
                                         </div>
@@ -97,26 +103,24 @@
                                         <span class="text-sm text-gray-500">
                                             Quantity
                                         </span>
-                                        <button
-                                            type="button"
-                                            class="decrease-cart-item w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition"
-                                            data-product-id="<%= product._id %>"
+                                        <a
+                                            href="/cart/delete/<%= product._id %>"
+                                            class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition"
                                         >
                                             <i class="ri-subtract-line"></i>
-                                        </button>
+                                        </a>
                                         <span
                                             class="cart-quantity px-4 py-1 rounded-md bg-gray-100"
                                             data-product-id="<%= product._id %>"
                                         >
                                             1
                                         </span>
-                                        <button
-                                            type="button"
-                                            class="increase-cart-item w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition"
-                                            data-product-id="<%= product._id %>"
+                                        <a
+                                            href="/cart/add/<%= product._id %>"
+                                            class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition"
                                         >
                                             <i class="ri-add-line"></i>
-                                        </button>
+                                        </a>
 
                                     </div>
 
@@ -145,7 +149,7 @@
                             Total MRP
                         </h4>
                         <h4>
-                            ₹
+                            ৳
                             <%= user.cart.reduce((total, product) => {
                                 return total + Number(product.price || 0);
                             }, 0) %>
@@ -159,7 +163,7 @@
                         </h4>
 
                         <h4 class="text-red-500">
-                            -₹
+                            -৳
                             <%= user.cart.reduce((total, product) => {
                                 return total + Number(product.discount || 0);
                             }, 0) %>
@@ -175,7 +179,7 @@
                             Platform Fee
                         </h4>
                         <h4>
-                            ₹ 20
+                            ৳ 20
                         </h4>
                     </div>
 
@@ -198,24 +202,25 @@
 
                         <h3 class="text-xl font-semibold text-green-600">
 
-                            ₹
+                            ৳
                             <%= user.cart.reduce((total, product) => {
-                                return total
-                                    + Number(product.price || 0)
-                                    - Number(product.discount || 0);
+                                return total+ Number(product.price || 0)- Number(product.discount || 0);
                             }, 20) %>
 
                         </h3>
 
                     </div>
 
-                    <button
-                        type="button"
-                        class="w-full mt-7 py-3 rounded-md bg-black text-white hover:bg-gray-800 transition"
-                    >
-                        Proceed to Checkout
-                    </button>
+                    <form action="/buy" method="POST">
 
+                        <button
+                            type="submit"
+                            class="w-full mt-7 py-3 rounded-md bg-black text-white hover:bg-gray-800 transition"
+                        >
+                            Proceed to Checkout
+                        </button>
+
+                    </form>
                 </div>
 
             </div>
@@ -223,69 +228,6 @@
         </div>
 
     </div>
-
-
-    <!-- ================= CART ACTIONS ================= -->
-
-    <script>
-
-        // Increase quantity
-        document.querySelectorAll('.increase-cart-item').forEach(button => {
-
-            button.addEventListener('click', () => {
-
-                const productId = button.dataset.productId;
-
-                console.log('Increase quantity:', productId);
-
-                // Later:
-                // fetch('/cart/increase/' + productId, {
-                //     method: 'POST'
-                // });
-
-            });
-
-        });
-
-
-        // Decrease quantity
-        document.querySelectorAll('.decrease-cart-item').forEach(button => {
-
-            button.addEventListener('click', () => {
-
-                const productId = button.dataset.productId;
-
-                console.log('Decrease quantity:', productId);
-
-                // Later:
-                // fetch('/cart/decrease/' + productId, {
-                //     method: 'POST'
-                // });
-
-            });
-
-        });
-
-
-        // Delete product
-        document.querySelectorAll('.delete-cart-item').forEach(button => {
-
-            button.addEventListener('click', () => {
-
-                const productId = button.dataset.productId;
-
-                console.log('Delete product:', productId);
-
-                // Later:
-                // fetch('/cart/remove/' + productId, {
-                //     method: 'POST'
-                // });
-
-            });
-
-        });
-
-    </script>
 
 </body>
 

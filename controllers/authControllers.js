@@ -38,24 +38,28 @@ module.exports.registerUser = async(req,res)=>{
 
     if (error) {
         const errorMessages = error.details.map(detail => detail.message);
-        return res.status(400).json({ 
-            success: false, 
-            errors: errorMessages 
-        });
+        req.flash("error", errorMessages);
+
+        return res.redirect('/');
+
     }
     try{
         let{fullname,email,password}=req.body;
         let existingUser = await userModel.findOne({ email });
         if (existingUser) {
-            return res.status(400).json({
-                success: false,
-                message: 'Unable to process registration with this email. Please try logging in.'
-            });
+            req.flash(
+                "error",
+                "Unable to process registration with this email. Please try logging in."
+            );
+            return res.redirect('/');
         }
 
         bcrypt.genSalt(10, (err, salt)=> {
             bcrypt.hash(password, salt,async(err, hash)=> {
-                if(err) return res.send(err.message);
+                if(err){
+                    req.flash("error", "Something went wrong. Please try again.");
+                    return res.redirect('/');
+                } 
                 else{
                     let createdUser=await userModel.create({
                         fullname,
@@ -73,7 +77,9 @@ module.exports.registerUser = async(req,res)=>{
     }
     catch(err){
         dbgr(err.message)
-        res.status(400).send(err.message);
+        req.flash("error", "Something went wrong. Please try again.");
+
+        res.redirect('/');
     }
 }
 
@@ -82,24 +88,32 @@ module.exports.loginUser= async(req,res)=>{
 
     if (error) {
         const errorMessages = error.details.map(detail => detail.message);
-        return res.status(400).json({ 
-            success: false, 
-            errors: errorMessages 
-        });
+        req.flash("error", errorMessages);
+
+        return res.redirect('/');
     }
     let{email,password}=req.body
     let user=await userModel.findOne({email})
-    if(!user) return res.send('Email or Password incorrect');
+    if(!user){
+        req.flash("error", "Email or Password incorrect");
+
+        return res.redirect('/');
+    }
     
     bcrypt.compare(password,user.password,(err,result)=>{
-        if(result){
-            let token=generateToken(user)
-            res.cookie("token",token)
-            res.redirect('/shop')
-        }
-        else{
-            res.send('Email or Password incorrect')
-        }
+        if (err) {
+                req.flash("error", "Something went wrong. Please try again.");
+                return res.redirect('/');
+            }
+            if (result) {
+                let token = generateToken(user);
+                res.cookie("token", token);
+                return res.redirect('/shop');
+
+            } else {
+                req.flash("error", "Email or Password incorrect");
+                return res.redirect('/');
+            }
     })
 }
 

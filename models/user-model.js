@@ -10,6 +10,7 @@ const userSchema=mongoose.Schema({
     password: String,
     cart:[{
         type: mongoose.Schema.Types.ObjectId,
+        qunatity: Number,
         ref: 'product',
     }],
     orders:[{
@@ -22,3 +23,19 @@ const userSchema=mongoose.Schema({
 });
 
 module.exports=mongoose.model('user',userSchema);
+
+// future scope->
+// cart: [
+//         {
+//             product: {
+//                 type: mongoose.Schema.Types.ObjectId,
+//                 ref: 'product',
+//                 required: true
+//             },
+//             quantity: {
+//                 type: Number,
+//                 default: 1,
+//                 min: 1
+//             }
+//         }
+//     ]
