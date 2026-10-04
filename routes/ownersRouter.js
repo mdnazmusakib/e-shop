@@ -4,7 +4,7 @@ const ownerModel=require('../models/owner_model')
 const bcrypt = require('bcrypt');
 const joi = require('joi');
 const isLoggedInOwner = require('../middlewares/isLoggedInOwner');
-const {loginOwner}=require('../controllers/authControllersOwner')
+const {login,logout}=require('../controllers/authControllersOwner')
 
 const ownerCreateSchema = joi.object({
     fullname: joi.string().min(3).trim().required().messages({
@@ -65,7 +65,8 @@ router.get('/login', (req, res) => {
 });
 
 
-router.post('/login', loginOwner);
+router.post('/login', login);
+router.get('/logout', logout)
 
 router.get('/admin',isLoggedInOwner,(req,res)=>{
     let success=req.flash("success");

@@ -16,7 +16,7 @@ const ownerLoginSchema = joi.object({
     })
 });
 
-module.exports.loginOwner=async (req, res) => {
+module.exports.login=async (req, res) => {
     const { error, value } = ownerLoginSchema.validate(req.body, { abortEarly: false });
     if (error) {
         req.flash("error", error.details[0].message); 
@@ -51,4 +51,9 @@ module.exports.loginOwner=async (req, res) => {
         req.flash("error", "Something went wrong during login");
         return res.redirect('/owners/login');
     }
+}
+
+module.exports.logout= (req,res)=>{
+    res.cookie("token","")
+    res.redirect('/')
 }

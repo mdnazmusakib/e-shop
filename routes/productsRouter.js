@@ -4,7 +4,7 @@ const upload=require('../config/multer-config')
 const productModel=require('../models/product-model')
 
 
-router.get('/create',upload.single('image'),async(req,res)=>{
+router.post('/create',upload.single('image'),async(req,res)=>{
     try{
         let{name,price,discount,bgcolor,panelcolor,textcolor}=req.body
         let createdProduct=await productModel.create({
