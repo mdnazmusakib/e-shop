@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Cart - Scatch</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body class="font-['helvetica_now_display'] bg-gray-100">
+
+    <% if(success.length>0){ %>
+        <div class="absolute top-5 left-1/2 -translate-x-1/2 -translate-y-1/2 p-3 rounded-md bg-blue-500">
+            <span class="inline-block mt-1 mb-1 text-white">
+                <%= success %>
+            </span>
+        </div>
+    <% } %>
+
+    <nav class="w-full flex justify-between px-5 py-3">
+        <h3 class="text-xl">Scatch</h3>
+        <div class="flex gap-5">
+            <a href="/shop">Shop</a>
+            <a href="/cart">Cart</a>
+            <a href="/account">My Account</a>
+            <a class="text-red-600" href="/users/logout">Logout</a>
+        </div>
+    </nav>
+
+
+    <div class="min-h-screen px-5 sm:px-10 lg:px-20 py-10">
+
+        <h1 class="text-3xl font-semibold mb-8">
+            My Cart
+        </h1>
+        <div class="flex flex-col lg:flex-row gap-10">
+            <div class="w-full lg:w-[65%]">
+
+                <h2 class="text-xl font-semibold mb-5">
+                    Cart Items
+                </h2>
+                <% if (user.cart.length === 0) { %>
+                    <div class="bg-white rounded-lg p-10 text-center shadow-sm">
+                        <i class="ri-shopping-cart-line text-6xl text-gray-400"></i>
+                        <h3 class="text-xl font-semibold mt-4">
+                            Your cart is empty
+                        </h3>
+                        <a href="/shop"
+                            class="inline-block mt-5 px-6 py-3 rounded-md bg-black text-white">
+                            Continue Shopping
+                        </a>
+                    </div>
+                <% } else { %>
+                
+                    <% user.cart.forEach(function(product) { %>
+                        <div class="w-full bg-white rounded-lg overflow-hidden shadow-sm mb-5"
+                            data-product-id="<%= product._id %>">
+                            <div class="flex flex-col sm:flex-row">
+                                <div
+                                    class="w-full sm:w-[220px] h-[220px] bg-[<%=product.bgcolor%>] flex items-center justify-center"
+                                >
+                                    <img
+                                        class="h-[170px] w-[170px] object-contain"
+                                        src="data:image/jpeg;base64,<%= product.image.toString('base64') %>"
+                                        alt="<%= product.name %>"
+                                    >
+                                </div>
+                                <div class="flex-1 p-5 bg-[<%=product.panelcolor%>]">
+
+                                    <div class="flex justify-between items-start gap-4">
+
+                                        <h3 class="text-xl font-semibold">
+                                            <%= product.name %>
+                                        </h3>
+                                        <a href="/cart/delete/<%= product._id %>"
+                                            class="text-red-500 text-xl hover:text-red-700 transition"
+                                            title="Remove from cart"
+                                            >
+                                            <i class="ri-delete-bin-line"></i>
+                                        </a>
+
+                                    </div>
+                                    <div class="mt-6">
+
+                                        <div class="flex items-center gap-3">
+                                            <h3 class="text-xl font-semibold">
+                                                ৳ <%= product.price %>
+                                            </h3>
+
+                                            <% if (Number(product.discount || 0) > 0) { %>
+                                                <span class="text-red-500 text-lg font-medium">
+                                                    -৳ <%= product.discount %>
+                                                </span>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-3 mt-6">
+
+                                        <span class="text-sm text-gray-500">
+                                            Quantity
+                                        </span>
+                                        <a
+                                            href="/cart/delete/<%= product._id %>"
+                                            class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition"
+                                        >
+                                            <i class="ri-subtract-line"></i>
+                                        </a>
+                                        <span
+                                            class="cart-quantity px-4 py-1 rounded-md bg-gray-100"
+                                            data-product-id="<%= product._id %>"
+                                        >
+                                            1
+                                        </span>
+                                        <a
+                                            href="/cart/add/<%= product._id %>"
+                                            class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition"
+                                        >
+                                            <i class="ri-add-line"></i>
+                                        </a>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    <% }) %>
+
+                <% } %>
+
+            </div>
+
+            <div class="w-full lg:w-[35%]">
+
+                <div class="bg-white rounded-lg p-6 shadow-sm lg:sticky lg:top-5">
+
+                    <h2 class="text-xl font-semibold mb-6">
+                        Price Breakdown
+                    </h2>
+
+                    <div class="flex justify-between mt-3">
+                        <h4 class="text-gray-600">
+                            Total MRP
+                        </h4>
+                        <h4>
+                            ৳
+                            <%= user.cart.reduce((total, product) => {
+                                return total + Number(product.price || 0);
+                            }, 0) %>
+                        </h4>
+
+                    </div>
+                    <div class="flex justify-between mt-4">
+
+                        <h4 class="text-gray-600">
+                            Discount on MRP
+                        </h4>
+
+                        <h4 class="text-red-500">
+                            -৳
+                            <%= user.cart.reduce((total, product) => {
+                                return total + Number(product.discount || 0);
+                            }, 0) %>
+
+                        </h4>
+                    </div>
+
+
+                    <!-- Platform Fee -->
+
+                    <div class="flex justify-between mt-4">
+                        <h4 class="text-gray-600">
+                            Platform Fee
+                        </h4>
+                        <h4>
+                            ৳ 20
+                        </h4>
+                    </div>
+
+                    <div class="flex justify-between mt-4">
+                        <h4 class="text-gray-600">
+                            Shipping Fee
+                        </h4>
+                        <h4 class="text-green-600">
+                            FREE
+                        </h4>
+
+                    </div>
+                    <div class="w-full h-[1px] bg-gray-200 mt-7"></div>
+
+                    <div class="flex justify-between mt-6">
+
+                        <h3 class="text-xl font-semibold">
+                            Total Amount
+                        </h3>
+
+                        <h3 class="text-xl font-semibold text-green-600">
+
+                            ৳
+                            <%= user.cart.reduce((total, product) => {
+                                return total+ Number(product.price || 0)- Number(product.discount || 0);
+                            }, 20) %>
+
+                        </h3>
+
+                    </div>
+
+                    <form action="/buy" method="POST">
+
+                        <button
+                            type="submit"
+                            class="w-full mt-7 py-3 rounded-md bg-black text-white hover:bg-gray-800 transition"
+                        >
+                            Proceed to Checkout
+                        </button>
+
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
