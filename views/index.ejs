@@ -4,62 +4,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Cartify - Sign in or create an account</title>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 
-<body class="font-['helvetica_now_display']">
-    <nav class="w-full flex justify-between px-5 py-3">
-        <h3 class="text-xl">Cartify</h3>
-        <div class="flex gap-5">
-            <a class="text-blue-600" href="/owners/login">Admin Login</a>
-        </div>
-    </nav>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+    <header class="bg-white border-b border-slate-200">
+        <nav class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+            <h3 class="font-serif text-2xl font-bold tracking-tight text-blue-900">Cartify</h3>
+            <div class="flex gap-5 text-sm">
+                <a class="text-blue-900 font-medium hover:underline" href="/owners/login">Admin Login</a>
+            </div>
+        </nav>
+    </header>
 
     <% if(error.length>0){ %>
-        <div class="absolute top-5 left-1/2 -translate-x-1/2 -translate-y-1/2 p-3 rounded-md bg-red-500">
-            <span class="inline-block mt-1 mb-1 text-white">
+        <div class="fixed top-4 inset-x-0 mx-auto w-fit max-w-[90%] z-50 px-5 py-3 rounded border border-red-300 bg-red-50 shadow">
+            <span class="text-red-800 text-sm">
                 <%= error %>
             </span>
         </div>
-        <% } %>
-            <div class="w-full h-screen flex px-20">
-                <div class="w-1/2 flex items-center justify-center h-screen">
-                    <div class="w-full px-32">
-                        <h3 class="text-4xl">welcome to <span class="text-blue-400 font-semibold">Scatch</span></h3>
-                        <h4 class="text-2xl mb-5">create your account</h4>
-                        <form autocomplete="off" action="/users/register" method="post">
-                            <input
-                                class="bg-zinc-100 block w-full px-3 py-2 border-[1px] rounded-md mb-3 border-zinc-200"
-                                type="text" placeholder="Full Name" name="fullname">
-                            <input
-                                class="bg-zinc-100 block w-full px-3 py-2 border-[1px] rounded-md mb-3 border-zinc-200"
-                                type="email" placeholder="Email" name="email">
-                            <input
-                                class="bg-zinc-100 block w-full px-3 py-2 border-[1px] rounded-md mb-3 border-zinc-200"
-                                type="password" placeholder="Password" name="password">
-                            <input class="px-5 rounded-full py-3 mt-2 bg-blue-500 text-white" type="submit"
-                                value="Create My Account">
-                        </form>
-                    </div>
-                </div>
-                <div class="w-1/2 flex items-center justify-center h-screen">
-                    <div class="w-full px-32">
-                        <h4 class="text-2xl capitalize mb-5">login your account</h4>
-                        <form autocomplete="off" action="/users/login" method="post">
-                            <input
-                                class="block bg-zinc-100 w-full px-3 py-2 border-[1px] rounded-md mb-3 border-zinc-200"
-                                type="email" placeholder="Email" name="email">
-                            <input
-                                class="block bg-zinc-100 w-full px-3 py-2 border-[1px] rounded-md mb-3 border-zinc-200"
-                                type="password" placeholder="Password" name="password">
-                            <input class="px-5 block rounded-full py-3 mt-2 bg-blue-500 text-white" type="submit"
-                                value="Login">
-                        </form>
-                    </div>
-                </div>
-            </div>
+    <% } %>
+
+    <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-10 lg:py-16">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+
+            <section class="bg-white border border-slate-200 rounded-md shadow-sm p-6 sm:p-10">
+                <h3 class="font-serif text-3xl sm:text-4xl text-slate-900">welcome to <span class="font-semibold text-blue-900">Cartify</span></h3>
+                <h4 class="font-serif text-xl text-slate-600 mt-1 mb-6">create your account</h4>
+                <form autocomplete="off" action="/users/register" method="post">
+                    <input
+                        class="block w-full px-3 py-2.5 mb-4 bg-white border border-slate-300 rounded focus:outline-none focus:border-blue-900 focus:ring-1 focus:ring-blue-900"
+                        type="text" placeholder="Full Name" aria-label="Full Name" name="fullname">
+                    <input
+                        class="block w-full px-3 py-2.5 mb-4 bg-white border border-slate-300 rounded focus:outline-none focus:border-blue-900 focus:ring-1 focus:ring-blue-900"
+                        type="email" placeholder="Email" aria-label="Email" name="email">
+                    <input
+                        class="block w-full px-3 py-2.5 mb-4 bg-white border border-slate-300 rounded focus:outline-none focus:border-blue-900 focus:ring-1 focus:ring-blue-900"
+                        type="password" placeholder="Password" aria-label="Password" name="password">
+                    <input
+                        class="w-full sm:w-auto px-6 py-2.5 mt-2 bg-blue-900 text-white rounded cursor-pointer hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-900 focus:ring-offset-2"
+                        type="submit" value="Create My Account">
+                </form>
+            </section>
+
+            <section class="bg-white border border-slate-200 rounded-md shadow-sm p-6 sm:p-10">
+                <h4 class="font-serif text-2xl capitalize text-slate-900 mb-6">login your account</h4>
+                <form autocomplete="off" action="/users/login" method="post">
+                    <input
+                        class="block w-full px-3 py-2.5 mb-4 bg-white border border-slate-300 rounded focus:outline-none focus:border-blue-900 focus:ring-1 focus:ring-blue-900"
+                        type="email" placeholder="Email" aria-label="Email" name="email">
+                    <input
+                        class="block w-full px-3 py-2.5 mb-4 bg-white border border-slate-300 rounded focus:outline-none focus:border-blue-900 focus:ring-1 focus:ring-blue-900"
+                        type="password" placeholder="Password" aria-label="Password" name="password">
+                    <input
+                        class="w-full sm:w-auto px-6 py-2.5 mt-2 bg-blue-900 text-white rounded cursor-pointer hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-900 focus:ring-offset-2"
+                        type="submit" value="Login">
+                </form>
+            </section>
+
+        </div>
+    </main>
 </body>
 
 </html>
